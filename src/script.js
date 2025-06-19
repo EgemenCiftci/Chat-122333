@@ -9,7 +9,6 @@ const firebaseConfig = {
     measurementId: "G-RX5Z97DYP8"
 };
 
-let messages = [];
 let users = new Set();
 let database = null;
 let userRef = null;
@@ -18,6 +17,7 @@ let usersRef = null;
 let onlineCountDisplay = null;
 let messagesContainer = null;
 let userId = null;
+let username = null;
 
 document.addEventListener('DOMContentLoaded', function () {
     const usernameDisplay = document.getElementById('username');
@@ -26,8 +26,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const messageInput = document.getElementById('messageInput');
     const sendButton = document.getElementById('sendButton');
 
-    userId = 'user_' + Math.random().toString(36).substr(2, 9);
-    const username = generateUsername();
+    userId = 'user_' + Math.random().toString(36).substring(2, 11);
+    username = generateUsername();
     usernameDisplay.textContent = username;
 
     initializeFirebaseChat();
@@ -84,7 +84,7 @@ function initializeFirebaseChat() {
         usersRef.on('value', (snapshot) => {
             const firebaseUsers = snapshot.val();
             const count = firebaseUsers ? Object.keys(firebaseUsers).length : 0;
-            onlineCountDisplay.textContent = count > 1 ? ` • ${count} users online` : '';
+            onlineCountDisplay.textContent = count > 0 ? ` • ${count} user(s) online` : '';
         });
 
         // Listen for messages
@@ -96,7 +96,8 @@ function initializeFirebaseChat() {
                 const messagesList = Object.entries(firebaseMessages)
                     .sort((a, b) => (a[1].timestamp || 0) - (b[1].timestamp || 0));
 
-                messagesList.forEach(([id, message]) => {
+                messagesList.forEach(([, message]) => {
+                    message.isOwn = message.userId === userId;
                     addMessageToUI(message);
                 });
             }
@@ -119,21 +120,6 @@ function addSystemMessage(text) {
     messageDiv.className = 'system-message';
     messageDiv.textContent = text;
     messagesContainer.appendChild(messageDiv);
-    scrollToBottom();
-}
-
-function addMessage(text, senderName, senderId, isOwn) {
-    const message = {
-        id: Date.now() + Math.random(),
-        text: text,
-        username: senderName,
-        userId: senderId,
-        timestamp: Date.now(),
-        isOwn: isOwn
-    };
-
-    messages.push(message);
-    addMessageToUI(message);
     scrollToBottom();
 }
 
@@ -177,9 +163,6 @@ function sendMessage() {
         }).catch((error) => {
             console.error('Error sending message:', error);
         });
-    } else {
-        // Send to in-memory storage
-        addMessage(text, username, userId, true);
     }
 
     messageInput.value = '';
