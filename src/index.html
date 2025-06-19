@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat 122333</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/11.9.1/firebase-database-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/11.9.1/firebase-init.js?useEmulator=false"></script>
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-title">Anonymous Chat</div>
+                <div class="user-info">
+                    You are: <span id="username">Loading...</span>
+                    <span class="online-users" id="onlineCount"></span>
+                </div>
+            </div>
+
+            <div class="messages-container" id="messagesContainer">
+                <div class="system-message">Welcome to the anonymous chat! Messages are stored temporarily in this
+                    session.</div>
+            </div>
+
+            <div class="input-container">
+                <input type="text" class="message-input" id="messageInput" placeholder="Type your message..."
+                    maxlength="500">
+                <button class="send-button" id="sendButton">Send</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
