@@ -117,23 +117,30 @@ function initializeFirebaseChat() {
 
 function addSystemMessage(text) {
     const messageDiv = document.createElement('div');
-    messageDiv.className = 'system-message';
-    messageDiv.textContent = text;
-    messagesContainer.appendChild(messageDiv);
-    scrollToBottom();
-}
-
-function addMessageToUI(message) {
-    const messageDiv = document.createElement('div');
     messageDiv.className = `message ${message.isOwn ? 'own' : 'other'}`;
 
-    const time = new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const msgDate = new Date(message.timestamp);
+    const now = new Date();
+
+    const isToday =
+        msgDate.getDate() === now.getDate() &&
+        msgDate.getMonth() === now.getMonth() &&
+        msgDate.getFullYear() === now.getFullYear();
+
+    let timeString;
+    if (isToday) {
+        timeString = msgDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else {
+        const dateString = msgDate.toLocaleDateString();
+        const timePart = msgDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        timeString = `${dateString} ${timePart}`;
+    }
 
     messageDiv.innerHTML = `
-                ${!message.isOwn ? `<div class="message-sender">${escapeHtml(message.username)}</div>` : ''}
-                <div class="message-text">${escapeHtml(message.text)}</div>
-                <div class="message-time">${time}</div>
-            `;
+        ${!message.isOwn ? `<div class="message-sender">${escapeHtml(message.username)}</div>` : ''}
+        <div class="message-text">${escapeHtml(message.text)}</div>
+        <div class="message-time">${timeString}</div>
+    `;
 
     messagesContainer.appendChild(messageDiv);
 }
