@@ -117,6 +117,14 @@ function initializeFirebaseChat() {
 
 function addSystemMessage(text) {
     const messageDiv = document.createElement('div');
+    messageDiv.className = 'system-message';
+    messageDiv.textContent = text;
+    messagesContainer.appendChild(messageDiv);
+    scrollToBottom();
+}
+
+function addMessageToUI(message) {
+    const messageDiv = document.createElement('div');
     messageDiv.className = `message ${message.isOwn ? 'own' : 'other'}`;
 
     const msgDate = new Date(message.timestamp);
