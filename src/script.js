@@ -18,6 +18,7 @@ let onlineCountDisplay = null;
 let messagesContainer = null;
 let userId = null;
 let username = null;
+const userIdKey = 'userId';
 const usernameKey = 'username';
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -27,7 +28,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const messageInput = document.getElementById('messageInput');
     const sendButton = document.getElementById('sendButton');
 
-    userId = 'user_' + Math.random().toString(36).substring(2, 11);
+    const storedUserId = localStorage.getItem(userIdKey);
+
+    if (storedUserId) {
+        userId = storedUserId;
+    } else {
+        userId = 'user_' + Math.random().toString(36).substring(2, 11);
+        localStorage.setItem(userIdKey, userId);
+    }
+
     const storedUsername = localStorage.getItem(usernameKey);
 
     if (storedUsername) {
