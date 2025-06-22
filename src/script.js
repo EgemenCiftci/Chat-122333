@@ -18,6 +18,7 @@ let onlineCountDisplay = null;
 let messagesContainer = null;
 let userId = null;
 let username = null;
+const usernameKey = 'username';
 
 document.addEventListener('DOMContentLoaded', function () {
     const usernameDisplay = document.getElementById('username');
@@ -27,7 +28,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const sendButton = document.getElementById('sendButton');
 
     userId = 'user_' + Math.random().toString(36).substring(2, 11);
-    username = generateUsername();
+    const storedUsername = localStorage.getItem(usernameKey);
+
+    if (storedUsername) {
+        username = storedUsername;
+    } else {
+        username = generateUsername();
+        localStorage.setItem(usernameKey, username);
+    }
+
     usernameDisplay.textContent = username;
 
     initializeFirebaseChat();
